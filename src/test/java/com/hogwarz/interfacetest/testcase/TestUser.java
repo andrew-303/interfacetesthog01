@@ -41,7 +41,21 @@ public class TestUser {
     @Test
     public void create() {
         User user = new User();
-        String userId = "The First Member";
+        String name = "The First Member";
+        String userId = "Biyl_" + System.currentTimeMillis();
+        String department = "3";
+        String mobile = String.valueOf(System.currentTimeMillis()).substring(0,11);
+        String address = "杭州江干区2-6号";
+
+        HashMap<String, Object> data = new HashMap<>();
+
+        data.put("name",name);
+        data.put("department",department);
+        data.put("mobile",mobile);
+        data.put("address",address);
+
+        user.create(userId,data).then().body("errcode",equalTo(0));
+        user.getInfo(userId).then().body("name",equalTo(name));
 
     }
 }
