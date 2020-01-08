@@ -41,4 +41,20 @@ public class User {
                 .then().log().all()
                 .extract().response();
     }
+
+    /**
+     * 创建用户
+     */
+    public Response create(String userId,HashMap<String,Object> data) {
+        data.put("userid",userId);
+
+        return given()
+                .queryParam("access_token",Work.getInstance().getToken())
+                .body(data)
+                .when().log().all()
+                .post("https://qyapi.weixin.qq.com/cgi-bin/user/create")
+                .then().log().all()
+                .extract().response();
+    }
+
 }

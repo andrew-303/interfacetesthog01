@@ -33,7 +33,15 @@ public class TestUser {
         data.put("name",nameNew);
         user.update(userId,data);
         user.getInfo(userId).then().body("name",equalTo(nameNew));
+    }
 
+    /**
+     * 创建成员信息
+     */
+    @Test
+    public void create() {
+        User user = new User();
+        String userId = "The First Member";
 
     }
 }
