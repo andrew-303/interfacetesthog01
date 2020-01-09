@@ -58,4 +58,23 @@ public class TestUser {
         user.getInfo(userId).then().body("name",equalTo(name));
 
     }
+
+    /**
+     * 从模版中Clone成员
+     */
+    @Test
+    public void cloneUser() {
+        String nameNew = "name for testing";
+        String userid = "biyl_" + System.currentTimeMillis();
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("name",nameNew);
+        data.put("mobile",String.valueOf(System.currentTimeMillis()).substring(0,11));
+
+        User user = new User();
+        user.clone(userid,data).then().body("errcode",equalTo(0));
+        user.getInfo(userid).then().body("name",equalTo(nameNew));
+
+    }
+
 }
