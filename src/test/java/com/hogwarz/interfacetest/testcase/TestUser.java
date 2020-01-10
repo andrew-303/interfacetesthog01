@@ -2,11 +2,14 @@ package com.hogwarz.interfacetest.testcase;
 
 import com.hogwarz.interfacetest.api.User;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
 public class TestUser {
 
@@ -77,4 +80,47 @@ public class TestUser {
 
     }
 
+    /**
+     * 删除成员
+     * 先创建成员，再删除成员，保证无前后依赖影响，保证数据一致性
+     */
+    @Test
+    public void delete() {
+        String nameNew = "name for testing";
+        String userid = "Biyl_1578489753478";
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("name",nameNew);
+        data.put("mobile",String.valueOf(System.currentTimeMillis()).substring(0,11));
+
+
+        User user = new User();
+        user.clone(userid,data).then().body("errcode",equalTo(0));
+        user.delete(userid).then().body("errcode",equalTo(0));
+        user.getInfo(userid).then().body("errcode",not(equalTo(0)));
+
+    }
+
+    /**
+     * 通过读取csv文件作为参数，删除用户
+     */
+    @ParameterizedTest
+    @CsvFileSource(resources = "TestUser.csv")
+    public void deleteByParams(String name, String userid) {
+        String nameNew = name;
+        if (userid.isEmpty()) {
+            userid = "biyl_" + System.currentTimeMillis();
+        }
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("name",nameNew);
+        data.put("department",new int[]{1});
+        data.put("mobile",String.valueOf(System.currentTimeMillis()).substring(0,11));
+
+        User user = new User();
+        user.create(userid,data).then().body("errcode",equalTo(0));
+        user.delete(userid).then().body("errcode",equalTo(0));
+        user.getInfo(userid).then().body("errcode",not(equalTo(0)));
+
+    }
 }

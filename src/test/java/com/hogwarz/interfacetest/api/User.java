@@ -83,6 +83,18 @@ public class User {
 
     }
 
+    /**
+     * 删除用户
+     */
+    public Response delete(String userid) {
+        return given()
+                .queryParam("access_token",Work.getInstance().getToken())
+                .queryParam("userid",userid)
+                .when().log().all()
+                .get("https://qyapi.weixin.qq.com/cgi-bin/user/delete")
+                .then().log().all()
+                .extract().response();
+    }
 
     /**
      * 模版处理方法
