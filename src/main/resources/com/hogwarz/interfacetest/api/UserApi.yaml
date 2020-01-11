@@ -1,0 +1,7 @@
+#PO的配置文件定义，获取用户信息
+methods:
+  get:
+    query:
+      userid: ${userid}
+    method: get
+    url: https://qyapi.weixin.qq.com/cgi-bin/user/get
