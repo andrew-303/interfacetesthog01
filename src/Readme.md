@@ -9,7 +9,7 @@ framework：
 实现PO的模型定义：
 PO的配置文件:UserApi.yaml
 PO的代码：UserApi
-BaseApi:定义基础的解析步骤代码
+BaseApi:定义基础的解析步骤代码,解决通用数据的封装问题
 ApiObjectModel： 解决PO如何定义
 ApiObjectMethodModel：解决http协议如何定义
           

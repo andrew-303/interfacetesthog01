@@ -26,6 +26,7 @@ public class BaseApi {
         System.out.println("method: " + method);
         System.out.println("getStackTrace()[0]: " + Thread.currentThread().getStackTrace()[0].getMethodName());
         System.out.println("getStackTrace()[1]: " + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         if (model.methods.entrySet().isEmpty()) {
             System.out.println("The pom is first load!!!");
             String path = "/" + this.getClass().getCanonicalName().replace(".","/")+ ".yaml";

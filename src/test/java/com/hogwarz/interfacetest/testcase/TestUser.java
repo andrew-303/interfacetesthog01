@@ -3,13 +3,17 @@ package com.hogwarz.interfacetest.testcase;
 import com.hogwarz.interfacetest.api.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public class TestUser {
 
@@ -122,5 +126,33 @@ public class TestUser {
         user.delete(userid).then().body("errcode",equalTo(0));
         user.getInfo(userid).then().body("errcode",not(equalTo(0)));
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("deleteByParamsFromYamlData")
+    public void deleteByParamsFromYam(String name, String userid) {
+        String nameNew = name;
+        if (userid.isEmpty()) {
+            userid = "biyl_" + System.currentTimeMillis();
+        }
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("name",nameNew);
+        data.put("department",new int[]{1});
+        data.put("mobile",String.valueOf(System.currentTimeMillis()).substring(0,11));
+
+        User user = new User();
+        user.create(userid,data).then().body("errcode",equalTo(0));
+        user.delete(userid).then().body("errcode",equalTo(0));
+        user.getInfo(userid).then().body("errcode",not(equalTo(0)));
+
+    }
+
+    //java8中新增的流式参数
+    static Stream<Arguments> deleteByParamsFromYamlData() {
+        return Stream.of(
+                arguments("aaa","aaa"),
+                arguments("bbb","bbb")
+        );
     }
 }
