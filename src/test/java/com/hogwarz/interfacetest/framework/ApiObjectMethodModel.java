@@ -14,7 +14,10 @@ import static io.restassured.RestAssured.given;
  */
 public class ApiObjectMethodModel {
 
+    //用于承载外部传递参数的
     private HashMap<String,Object> params;
+
+    //对应yaml文件中对应的内容
     public HashMap<String,Object> query;
     public HashMap<String,Object> header;
     public HashMap<String,Object> postBody;
@@ -54,20 +57,24 @@ public class ApiObjectMethodModel {
                 .then().log().all().extract().response();
     }
 
+    public Response run(HashMap<String, Object> params) {
+        this.params = params;
+        return run();
+    }
+
     //替换传参中变量内容
     public String repalce(String raw) {
+        System.out.println("参数raw: " + raw);
+        //配置文件中的参数替换，将userid: ${userid}替换
         for (Map.Entry<String , Object> kv : params.entrySet() ) {
             String mather = "${"+ kv.getKey()+"}";
             if (raw.contains(mather)) {
-                System.out.println(kv);
+                System.out.println("传递过来的参数是: " + kv);
                 raw = raw.replace(mather,kv.getValue().toString());
             }
         }
         return raw;
     }
 
-    public Response run(HashMap<String, Object> params) {
-        this.params = params;
-        return run();
-    }
+
 }

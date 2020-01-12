@@ -11,6 +11,7 @@ public class UserApi extends BaseApi{
         params.put("userid",userid);
         setParams(params);
 
+        //解析步骤
         return parseSteps();
 
     }
