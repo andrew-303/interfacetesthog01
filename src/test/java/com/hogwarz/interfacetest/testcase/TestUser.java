@@ -1,5 +1,8 @@
 package com.hogwarz.interfacetest.testcase;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.hogwarz.interfacetest.api.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,8 +10,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -130,10 +133,14 @@ public class TestUser {
 
     @ParameterizedTest
     @MethodSource("deleteByParamsFromYamlData")
-    public void deleteByParamsFromYam(String name, String userid) {
+    public void deleteByParamsFromYam(String name, String userid,List<Integer> departs) {
         String nameNew = name;
         if (userid.isEmpty()) {
             userid = "biyl_" + System.currentTimeMillis();
+        }
+
+        if (departs == null) {
+            departs = Arrays.asList(1);
         }
 
         HashMap<String, Object> data = new HashMap<>();
@@ -150,9 +157,29 @@ public class TestUser {
 
     //java8中新增的流式参数
     static Stream<Arguments> deleteByParamsFromYamlData() {
-        return Stream.of(
-                arguments("aaa","aaa"),
-                arguments("bbb","bbb")
-        );
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        //对进行泛型的反序列化，使用TypeReference可以明确的指定反序列化的类型
+        //是一个特定数据类型的引用，是因为有些结构无法使用XXX.class，所有采用这种写法
+        TypeReference<List<HashMap<String, Object>>> typeRef = new TypeReference<List<HashMap<String, Object>>>(){
+
+        };
+        List<HashMap<String,Object>> data;
+        try {
+            //从配置文件中读取配置
+            data = mapper.readValue(TestUser.class.getResourceAsStream("TestUser.yaml"),typeRef);
+            ArrayList<Arguments> results = new ArrayList<>();
+            data.forEach(map -> {
+                results.add(arguments(
+                        map.get("name").toString(),
+                        map.get("userid").toString(),
+                        map.get("departs")
+                ));
+            });
+
+            return results.stream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Stream.of();
     }
 }
