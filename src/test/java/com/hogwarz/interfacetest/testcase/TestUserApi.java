@@ -8,6 +8,6 @@ public class TestUserApi {
     @Test
     public void get() {
         UserApi user = new UserApi();
-        user.get("biyl_djfkjsdkfjs");
+        user.get("Biyl_1578552417150");
     }
 }

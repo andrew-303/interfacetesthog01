@@ -103,6 +103,13 @@
             <version>0.9.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>4.1.2</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
